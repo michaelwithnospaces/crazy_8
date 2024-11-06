@@ -3,7 +3,7 @@
 #include "Card.h"
 using std::string;
 
-Card::Card(string rank, string suit) : rank(rank), suit(suit) 
+Card::Card(string rank, string suit) : rank(rank), suit(suit), timesPlayed(0) 
 {
     // implement constructor checks
     if (rank.empty() || suit.empty())
