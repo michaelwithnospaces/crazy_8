@@ -4,7 +4,8 @@
 #include<string>
 #include<vector>
 
-class Card{
+class Card
+{
     private:
         std::string rank; 
         std::string suit; 

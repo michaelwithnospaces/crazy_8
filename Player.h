@@ -5,7 +5,8 @@
 #include<vector>
 #include "Card.h"
 
-class Player{
+class Player
+{
     private:
         bool isAI;
         std::vector<Card*> hand;

@@ -6,7 +6,8 @@
 #include "Player.h"
 #include "Card.h"
 
-class Game{
+class Game
+{
     private:
         std::vector<Player*> players;
         std::vector<std::string> suits;

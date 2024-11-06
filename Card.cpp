@@ -3,26 +3,32 @@
 #include "Card.h"
 using std::string;
 
-Card::Card(string rank, string suit) /* TODO: initialize */ {
+Card::Card(string rank, string suit) /* TODO: initialize */ 
+{
     // TODO: implement constructor checks
 }
 
-string Card::getRank(){
+string Card::getRank()
+{
     // TODO: implement getter
 }
 
-string Card::getSuit(){
+string Card::getSuit()
+{
     // TODO: implement getter
 }
 
-int Card::getTimesPlayed(){
+int Card::getTimesPlayed()
+{
     // TODO: implement getter
 }
 
-bool Card::canBePlayed(string currentRank, string currentSuit){
+bool Card::canBePlayed(string currentRank, string currentSuit)
+{
     // TODO: return whether or not the card can legally be played
 }
 
-void Card::play(){
+void Card::play()
+{
     timesPlayed++;
 }
