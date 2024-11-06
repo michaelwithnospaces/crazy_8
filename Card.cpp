@@ -3,29 +3,57 @@
 #include "Card.h"
 using std::string;
 
-Card::Card(string rank, string suit) /* TODO: initialize */ 
+Card::Card(string rank, string suit) : rank(rank), suit(suit) 
 {
-    // TODO: implement constructor checks
+    // implement constructor checks
+    if (rank.empty() || suit.empty())
+    {
+        throw std::invalid_argument("rank or suit empty.");
+    }
+
+    for (char c : rank)
+    {
+        if (!isalnum(c))
+        {
+            throw std::invalid_argument("rank contains non alpha-numeric value.");
+        }
+    }
+
+    for (char c : suit)
+    {
+        if (!isalnum(c))
+        {
+            throw std::invalid_argument("suit contains non alpha-numeric value.");
+        }
+    }
 }
 
 string Card::getRank()
 {
-    // TODO: implement getter
+    // implement getter
+    return this->rank;
 }
 
 string Card::getSuit()
 {
-    // TODO: implement getter
+    // implement getter
+    return this->suit;
 }
 
 int Card::getTimesPlayed()
 {
-    // TODO: implement getter
+    // implement getter
+    return this->timesPlayed;
 }
 
 bool Card::canBePlayed(string currentRank, string currentSuit)
 {
-    // TODO: return whether or not the card can legally be played
+    // return whether or not the card can legally be played
+    if (this->rank == currentRank || this->suit == currentSuit || this->rank == "8")
+    {
+        return true;
+    }
+    return false;
 }
 
 void Card::play()
