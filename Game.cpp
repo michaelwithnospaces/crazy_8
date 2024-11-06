@@ -15,18 +15,22 @@ void Game::loadDeckFromFile(string filename)
 
     if (!(fs.is_open())) throw std::runtime_error("Could not open file.");
 
-    getline(fs, line);
-    std::stringstream s(line);
-    while (s >> word)
+    if (getline(fs, line))
     {
-        suits.push_back(word);
+        std::stringstream s(line);
+        while (s >> word)
+        {
+            suits.push_back(word);
+        }
     }
-
-    getline(fs, line);
-    std::stringstream s(line);
-    while (s >> word)
+    
+    if (getline(fs, line))
     {
-        ranks.push_back(word);
+        std::stringstream s(line);
+        while (s >> word)
+        {
+            ranks.push_back(word);
+        }
     }
 
     while (getline(fs, line))
