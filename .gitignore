@@ -1,0 +1,5 @@
+# Ignore the a.out executable
+a.out
+
+# Ignore the .vscode folder (settings for Visual Studio Code)
+.vscode/
