@@ -88,31 +88,115 @@ void Game::loadDeckFromFile(string filename)
 
 void Game::addPlayer(bool isAI)
 {
-    // TODO: add a new player to the game
+    // add a new player to the game
+    Player* newPlayer = new Player(isAI);
+    players.push_back(newPlayer);
 }
 
 void Game::drawCard(Player* p)
 {
-    // TODO: Move the top card of the draw pile to Player p's hand
+    // Move the top card of the draw pile to Player p's hand
     // If the draw pile is empty, flip the discard pile to create a new one
+    if (!drawPile.empty())
+    {
+        Card* cardDrawn = drawPile[drawPile.size() - 1];
+        drawPile.pop_back();
+        p->addToHand(cardDrawn);
+    }
+    else
+    {
+        if (discardPile.size() > 1)
+        {
+            std::cout << "“Draw pile, empty, flipping the discard pile.”" << std::endl;
+
+            for (int i=discardPile.size()-2 ; i>=0 ; --i)
+            {
+                drawPile.push_back(discardPile[i]);
+            }
+
+            // clear discard pile
+            Card* topCard = discardPile[discardPile.size() - 1];
+            discardPile.clear();
+            discardPile.push_back(topCard);
+        }
+        else
+        {
+            throw std::runtime_error("Discard pile empty");
+        }
+    }
 }
 
 //deals numCards cards to each player
 Card* Game::deal(int numCards)
 {
-    // TODO: Flip the top card of the draw pile to be the initial discard
+    // Flip the top card of the draw pile to be the initial discard
     // then deal numCards many cards to each player
+    if (drawPile.empty()) 
+    {
+        throw std::runtime_error("Draw pile is empty at start of deal");
+    }
+
+    Card* topCard = drawPile[drawPile.size() - 1];
+    discardPile.push_back(topCard);
+    drawPile.pop_back();
+
+    try
+    {
+        for (int i=0 ; i<numCards ; ++i)
+        {
+            for (Player* player : players)
+            {
+                drawCard(player);
+            }
+        }
+    }
+    catch(const std::exception& e)
+    {
+        throw std::runtime_error(e.what());
+    }
+    
+    return topCard;
 }
 
 string Game::mostPlayedSuit()
 {
-    // TODO: Return the suit which has been played the most times
+    // Return the suit which has been played the most times
     // if there is a tie, choose any of the tied suits
+    vector<int> suitCount(suits.size(), 0);
+
+    for (Card* card : deck)
+    {
+        std::string currentSuit = card->getSuit();
+        int timesPlayed = card->getTimesPlayed();
+
+        for (int i=0 ; i<suits.size() ; ++i)
+        {
+            if (currentSuit == suits[i])
+            {
+                suitCount[i] += timesPlayed;
+                break;
+            }
+        }
+    }
+
+    int largest = 0;
+    int largestIndex = -1;
+    for (int i=0 ; i < suitCount.size() ; ++i)
+    {
+        if (suitCount[i] > largest)
+        {
+            largest = suitCount[i];
+            largestIndex = i;
+        }
+    }
+
+    return suits[largestIndex];
 }
 
 int Game::runGame()
 {
-    // TODO: Run the game and return the number of the winning player
+    // Run the game and return the number of the winning player
+    return 0;    
 }
 
 //Destructor--Deallocates all the dynamic memory we allocated
