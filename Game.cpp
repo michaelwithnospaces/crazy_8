@@ -10,6 +10,80 @@ Game::Game(): players({}), suits({}), ranks({}), deck({}), drawPile({}), discard
 void Game::loadDeckFromFile(string filename)
 {
     // TODO: initialize suits, ranks, deck, and drawPile from the given file
+    std::ifstream file(filename);
+    if (!(file.is_open())) throw std::runtime_error("Could not open file.");
+
+    std::string line;
+    std::stringstream ss;
+
+    // read in suits
+    if (getline(file, line))
+    {
+        std::string word;
+        ss.clear();
+        ss.str(line);
+        while (ss >> word) suits.push_back(word);
+    }
+
+    // read in ranks
+    if (getline(file, line))
+    {
+        std::string word;
+        ss.clear();
+        ss.str(line);
+        while (ss >> word) ranks.push_back(word);
+    }
+
+    while (getline(file, line))
+    {
+        std::string suit, rank;
+        bool suitExists = false;
+        bool rankExists = false;
+        ss.clear();
+        ss.str(line);
+        
+        // check for too few values
+        if (ss >> rank >> suit)
+        {
+            // check for extra values
+            std::string extra;
+            if (ss >> extra) throw std::runtime_error("Too many values");
+
+            // check if rank is in list of ranks
+            for (std::string r : ranks)
+            {
+                if (rank == r)
+                {
+                    rankExists = true;
+                    break;
+                }
+            }
+            // check if suit is in list of suits
+            for (std::string s : suits)
+            {
+                if (suit == s)
+                {
+                    suitExists = true;
+                    break;
+                }
+            }
+
+            if (!(rankExists && suitExists)) throw std::runtime_error("rank or suit does not exist");
+
+            try
+            {
+                Card* newCard = new Card(rank, suit);
+                deck.push_back(newCard);
+                drawPile.insert(drawPile.begin(), newCard);
+            }
+            catch(const std::exception& e)
+            {
+                throw std::runtime_error(e.what());
+            }
+            
+        }
+        else throw std::runtime_error("Missing value");
+    }
 }
 
 void Game::addPlayer(bool isAI)
