@@ -33,9 +33,9 @@ int getPlayerCount()
         {
             if(std::cin.fail())
             {
-                //Clear the fail flag
+                // Clear the fail flag
                 std::cin.clear();
-                //Remove the non-integer data from the stream
+                // Remove the non-integer data from the stream
                 string garbage;
                 std::cin >> garbage;
             }
@@ -52,14 +52,61 @@ int getPlayerCount()
 
 void setupPlayers(Game& g, int numPlayers)
 {
-    // TODO: Determine whether each player is a human or an AI
+    // Determine whether each player is a human or an AI
     // and add them to the game
+    for (int i=0 ; i<numPlayers ; ++i)
+    {
+        std::cout << "Is player " << i << " an AI? (y/n)" << std::endl;
+        
+        char input; std::cin >> input;
+
+        while (!(input == 'y' || input == 'n'))
+        {
+            std::cin >> input;
+        }
+
+        switch (input)
+        {
+        case 'y':
+            g.addPlayer(true);
+            break;
+        
+        case 'n':
+            g.addPlayer(false);
+            break;
+        }
+    }
 }
 
 void setupGame(Game& g)
 {
-    // TODO: Determine how many cards to deal, deal the cards, and
+    // Determine how many cards to deal, deal the cards, and
     // print the initial discard
+    std::cout << "How many cards should each player start with?" << std::endl;
+    
+    int input;
+
+    while (true)
+    {
+        if (!(std::cin >> input) || (input <= 0))
+        {
+            if (std::cin.fail())
+            {
+                std::cin.clear();
+                std::string garbage;
+                std::cin >> garbage;
+            }
+            std::cout << "Please enter a positive number" << std::endl;
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    Card* card = g.deal(input);
+
+    std::cout << "The initial discard is " << card->getRank() << " Hearts" << std::endl;
 }
 
 int main()
