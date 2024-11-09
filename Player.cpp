@@ -3,7 +3,7 @@
 #include "Player.h"
 using std::vector, std::string, std::size_t;
 
-Player::Player(bool isAI) : isAI(isAI) {}
+Player::Player(bool isAI) : isAI(isAI), hand({}) {}
 
 void Player::addToHand(Card* c)
 {
@@ -21,7 +21,7 @@ std::string Player::getHandString()
 {
     // Implement getter
     std::string s = "";
-    for (int i=0 ; i<hand.size() ; ++i)
+    for (unsigned int i=0 ; i<hand.size() ; ++i)
     {
         s += hand[i]->getRank() + " " + hand[i]->getSuit();
         if (i < hand.size() - 1) s += ", ";
@@ -34,7 +34,7 @@ Card* Player::playCard(vector<string> const& suits, string& currentRank, string&
     // Choose a card to play and return the chosen card
     if (this->isAI) // if player is AI
     {
-        for (int i=0 ; i<this->hand.size() ; ++i)
+        for (unsigned int i=0 ; i<this->hand.size() ; ++i)
         {
             Card* currentCard = this->hand[i];
             // This technically handles 8's as well because the AI just chooses the cards suit
@@ -68,7 +68,7 @@ Card* Player::playCard(vector<string> const& suits, string& currentRank, string&
             Card* currentCard;
 
             if (rank == "8") eight = true;
-            for (int i=0 ; i<this->hand.size() ; ++i)
+            for (unsigned int i=0 ; i<this->hand.size() ; ++i)
             {
                 currentCard = this->hand[i];
                 if (currentCard->getRank() == rank && currentCard->getSuit() == suit)

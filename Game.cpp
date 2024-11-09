@@ -97,17 +97,11 @@ void Game::drawCard(Player* p)
 {
     // Move the top card of the draw pile to Player p's hand
     // If the draw pile is empty, flip the discard pile to create a new one
-    if (!drawPile.empty())
-    {
-        Card* cardDrawn = drawPile[drawPile.size() - 1];
-        drawPile.pop_back();
-        p->addToHand(cardDrawn);
-    }
-    else
+    if (drawPile.empty())
     {
         if (discardPile.size() > 1)
         {
-            std::cout << "“Draw pile, empty, flipping the discard pile.”" << std::endl;
+            std::cout << "Draw pile, empty, flipping the discard pile." << std::endl;
 
             for (int i=discardPile.size()-2 ; i>=0 ; --i)
             {
@@ -115,15 +109,22 @@ void Game::drawCard(Player* p)
             }
 
             // clear discard pile
-            Card* topCard = discardPile[discardPile.size() - 1];
+            Card* topCard = discardPile.back();
             discardPile.clear();
             discardPile.push_back(topCard);
+
+
         }
         else
         {
             throw std::runtime_error("Discard pile empty");
         }
     }
+
+    // draw card
+    Card* cardDrawn = drawPile.back();
+    drawPile.pop_back();
+    p->addToHand(cardDrawn);
 }
 
 //deals numCards cards to each player
@@ -136,7 +137,7 @@ Card* Game::deal(int numCards)
         throw std::runtime_error("Draw pile is empty at start of deal");
     }
 
-    Card* topCard = drawPile[drawPile.size() - 1];
+    Card* topCard = drawPile.back();
     discardPile.push_back(topCard);
     drawPile.pop_back();
 
@@ -169,7 +170,7 @@ string Game::mostPlayedSuit()
         std::string currentSuit = card->getSuit();
         int timesPlayed = card->getTimesPlayed();
 
-        for (int i=0 ; i<suits.size() ; ++i)
+        for (unsigned int i=0 ; i<suits.size() ; ++i)
         {
             if (currentSuit == suits[i])
             {
@@ -181,7 +182,7 @@ string Game::mostPlayedSuit()
 
     int largest = 0;
     int largestIndex = -1;
-    for (int i=0 ; i < suitCount.size() ; ++i)
+    for (unsigned int i=0 ; i<suitCount.size() ; ++i)
     {
         if (suitCount[i] > largest)
         {
@@ -196,7 +197,41 @@ string Game::mostPlayedSuit()
 int Game::runGame()
 {
     // Run the game and return the number of the winning player
-    return 0;    
+    std::string currentRank = discardPile.back()->getRank();
+    std::string currentSuit = discardPile.back()->getSuit();
+
+    while (true)
+    {
+        for (unsigned int i=0 ; i<players.size() ; ++i)
+        {
+            std::cout << "Player " << i <<"'s turn!" << std::endl;
+
+            Card* currentCard = players[i]->playCard(suits, currentRank, currentSuit);
+
+            if (currentCard == nullptr)
+            {
+                try
+                {
+                    drawCard(players[i]);
+                    std::cout << "Player " << i << " draws a card." << std::endl;
+                }
+                catch(const std::runtime_error& e)
+                {
+                    std::cout << "Player " << i << " cannot draw a card." << std::endl;
+                    return -1;
+                }
+            }
+            else
+            {
+                discardPile.push_back(currentCard);
+                std::cout << "Player " << i << " plays " << currentCard->getRank() << " " << discardPile.back()->getSuit();
+                if (currentCard->getRank() == "8") std::cout << " and changes the suit to " << currentSuit;
+                std::cout << "." << std::endl;
+            }
+
+            if (players[i]->getHandSize() == 0) return i;
+        }
+    }
 }
 
 //Destructor--Deallocates all the dynamic memory we allocated

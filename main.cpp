@@ -62,6 +62,7 @@ void setupPlayers(Game& g, int numPlayers)
 
         while (!(input == 'y' || input == 'n'))
         {
+            std::cout << "Please enter y or n" << std::endl;
             std::cin >> input;
         }
 
@@ -106,7 +107,7 @@ void setupGame(Game& g)
 
     Card* card = g.deal(input);
 
-    std::cout << "The initial discard is " << card->getRank() << " Hearts" << std::endl;
+    std::cout << "The initial discard is " << card->getRank() << " " << card->getSuit() << std::endl;
 }
 
 int main()
